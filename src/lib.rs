@@ -1,3 +1,30 @@
+//! Library to create dot directories in common system places.
+//!
+//! It's essentially a wrapper around the [`dirs`] crate that allows you to create dot directories
+//! (e.g. /home/user/.project-name) in common places (e.g. Home dir, Config dir etc.) to store program data and configs.
+//!
+//! You can also create them in custom locations
+//!
+//! # Examples
+//!
+//! ```rust,no_run
+//! use dotstore;
+//!
+//! fn main() -> std::io::Result<()> {
+//!     // Create a new directory called `/home/user/.barracuda`
+//!     // The `.` is automatically appended
+//!     let project_dir = dotstore::home_store("barracuda")?;
+//!
+//!     // Create a new directory called `/home/user/.config/.editor`
+//!     let editor_dir = dotstore::config_store("editor")?;
+//!
+//!     // Create a new directory called `/home/user/workspace/middle-earth/.eregion`
+//!     let custom_dir = dotstore::custom_store("/home/user/workspace/middle-earth", "eregion")?;
+//!
+//!     Ok(())
+//! }
+//! ```
+
 use dirs;
 use std::{
     fs, io,
@@ -79,10 +106,16 @@ fn create_store(store: StoreType, path: impl AsRef<Path>) -> io::Result<PathBuf>
     Ok(dir)
 }
 
+/// Creates a new directory (prefixed with a `.`) in the system's Audio directory
+///
+/// See [`dirs::audio_dir`] for your system's Audio directory
 pub fn audio_store(path: impl AsRef<Path>) -> io::Result<PathBuf> {
     create_store(StoreType::Audio, path)
 }
 
+/// Creates a new directory (prefixed with a `.`) in the system's Cache directory
+///
+/// See [`dirs::cache_dir`] for your system's Cache directory
 pub fn cache_store(path: impl AsRef<Path>) -> io::Result<PathBuf> {
     create_store(StoreType::Cache, path)
 }
