@@ -2,6 +2,13 @@
 name = "dotstore"
 version = "0.1.0"
 edition = "2024"
+authors = ["Graham Keenan <graham.keenan@outlook.com>"]
+description = "Create dot directories in common system paths"
+respository = "https://github.com/Tyrannican/dotstore"
+license = "MIT OR Apache-2.0"
+keywords = ["directory", "utility", "filesystem", "path"]
+categories = ["filesystem"]
+readme = "README.md"
 
 [dependencies]
 dirs = "6.0.0"

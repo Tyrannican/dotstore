@@ -88,130 +88,141 @@ fn create_dir(path: &PathBuf) -> io::Result<()> {
     Ok(())
 }
 
-fn create_store(store: StoreType, path: impl AsRef<Path>) -> io::Result<PathBuf> {
+fn create_store(store: StoreType, path: impl AsRef<Path>) -> io::Result<Option<PathBuf>> {
     let dir_fn = store.path();
-    let dir = if let Some(root) = dir_fn() {
+    if let Some(root) = dir_fn() {
         let store_dir = root.join(format!(".{}", path.as_ref().display()));
         create_dir(&store_dir)?;
 
-        store_dir
+        Ok(Some(store_dir))
     } else {
-        unreachable!(
-            "should be covered by cfg directives:\nStore Type - {store:?}\nPath - {}\nOS: {}\n\nFile a bug!",
-            path.as_ref().display(),
-            std::env::consts::OS
-        )
-    };
-
-    Ok(dir)
+        Ok(None)
+    }
 }
 
-/// Creates a new directory (prefixed with a `.`) in the system's Audio directory
-///
-/// See [`dirs::audio_dir`] for your system's Audio directory
-pub fn audio_store(path: impl AsRef<Path>) -> io::Result<PathBuf> {
+/// Creates a new dot directory in the systems Audio path (See [`dirs::audio_dir`])
+pub fn audio_store(path: impl AsRef<Path>) -> io::Result<Option<PathBuf>> {
     create_store(StoreType::Audio, path)
 }
 
-/// Creates a new directory (prefixed with a `.`) in the system's Cache directory
-///
-/// See [`dirs::cache_dir`] for your system's Cache directory
-pub fn cache_store(path: impl AsRef<Path>) -> io::Result<PathBuf> {
+/// Creates a new dot directory in the systems Cache path (See [`dirs::cache_dir`])
+pub fn cache_store(path: impl AsRef<Path>) -> io::Result<Option<PathBuf>> {
     create_store(StoreType::Cache, path)
 }
 
-pub fn config_store(path: impl AsRef<Path>) -> io::Result<PathBuf> {
+/// Creates a new dot directory in the systems Config path (See [`dirs::config_dir`])
+pub fn config_store(path: impl AsRef<Path>) -> io::Result<Option<PathBuf>> {
     create_store(StoreType::Config, path)
 }
 
-pub fn local_config_store(path: impl AsRef<Path>) -> io::Result<PathBuf> {
+/// Creates a new dot directory in the systems local Config path (See [`dirs::config_local_dir`])
+pub fn local_config_store(path: impl AsRef<Path>) -> io::Result<Option<PathBuf>> {
     create_store(StoreType::ConfigLocal, path)
 }
 
-pub fn data_store(path: impl AsRef<Path>) -> io::Result<PathBuf> {
+/// Creates a new dot directory in the systems Data path (See [`dirs::data_dir`])
+pub fn data_store(path: impl AsRef<Path>) -> io::Result<Option<PathBuf>> {
     create_store(StoreType::Data, path)
 }
 
-pub fn local_data_store(path: impl AsRef<Path>) -> io::Result<PathBuf> {
+/// Creates a new dot directory in the systems local Data path (See [`dirs::data_local_dir`])
+pub fn local_data_store(path: impl AsRef<Path>) -> io::Result<Option<PathBuf>> {
     create_store(StoreType::DataLocal, path)
 }
 
-pub fn desktop_store(path: impl AsRef<Path>) -> io::Result<PathBuf> {
+/// Creates a new dot directory in the systems Desktop path (See [`dirs::desktop_dir`])
+pub fn desktop_store(path: impl AsRef<Path>) -> io::Result<Option<PathBuf>> {
     create_store(StoreType::Desktop, path)
 }
 
-pub fn document_store(path: impl AsRef<Path>) -> io::Result<PathBuf> {
+/// Creates a new dot directory in the systems Document path (See [`dirs::document_dir`])
+pub fn document_store(path: impl AsRef<Path>) -> io::Result<Option<PathBuf>> {
     create_store(StoreType::Document, path)
 }
 
-pub fn download_store(path: impl AsRef<Path>) -> io::Result<PathBuf> {
+/// Creates a new dot directory in the systems Download path (See [`dirs::download_dir`])
+pub fn download_store(path: impl AsRef<Path>) -> io::Result<Option<PathBuf>> {
     create_store(StoreType::Download, path)
 }
 
-#[cfg(not(any(
-    target_os = "windows",
-    target_os = "macos",
-    target_os = "ios",
-    target_arch = "wasm32"
-)))]
-pub fn executable_store(path: impl AsRef<Path>) -> io::Result<PathBuf> {
+/// Creates a new dot directory in the systems Executable path (See [`dirs::executable_dir`])
+pub fn executable_store(path: impl AsRef<Path>) -> io::Result<Option<PathBuf>> {
     create_store(StoreType::Executable, path)
 }
 
-#[cfg(not(target_os = "windows"))]
-pub fn font_store(path: impl AsRef<Path>) -> io::Result<PathBuf> {
+/// Creates a new dot directory in the systems Font path (See [`dirs::font_dir`])
+pub fn font_store(path: impl AsRef<Path>) -> io::Result<Option<PathBuf>> {
     create_store(StoreType::Font, path)
 }
 
-pub fn home_store(path: impl AsRef<Path>) -> io::Result<PathBuf> {
+/// Creates a new dot directory in the systems Home path (See [`dirs::home_dir`])
+pub fn home_store(path: impl AsRef<Path>) -> io::Result<Option<PathBuf>> {
     create_store(StoreType::Home, path)
 }
 
-pub fn picture_store(path: impl AsRef<Path>) -> io::Result<PathBuf> {
+/// Creates a new dot directory in the systems Picture path (See [`dirs::picture_dir`])
+pub fn picture_store(path: impl AsRef<Path>) -> io::Result<Option<PathBuf>> {
     create_store(StoreType::Picture, path)
 }
 
-pub fn preference_store(path: impl AsRef<Path>) -> io::Result<PathBuf> {
+/// Creates a new dot directory in the systems Preference path (See [`dirs::picture_dir`])
+pub fn preference_store(path: impl AsRef<Path>) -> io::Result<Option<PathBuf>> {
     create_store(StoreType::Preference, path)
 }
 
-pub fn public_store(path: impl AsRef<Path>) -> io::Result<PathBuf> {
+/// Creates a new dot directory in the systems Public path (See [`dirs::public_dir`])
+pub fn public_store(path: impl AsRef<Path>) -> io::Result<Option<PathBuf>> {
     create_store(StoreType::Public, path)
 }
 
-#[cfg(not(any(
-    target_os = "windows",
-    target_os = "macos",
-    target_os = "ios",
-    target_arch = "wasm32"
-)))]
-pub fn runtime_store(path: impl AsRef<Path>) -> io::Result<PathBuf> {
+/// Creates a new dot directory in the systems Runtime path (See [`dirs::runtime_dir`])
+pub fn runtime_store(path: impl AsRef<Path>) -> io::Result<Option<PathBuf>> {
     create_store(StoreType::Runtime, path)
 }
 
-#[cfg(not(any(
-    target_os = "windows",
-    target_os = "macos",
-    target_os = "ios",
-    target_arch = "wasm32"
-)))]
-pub fn state_store(path: impl AsRef<Path>) -> io::Result<PathBuf> {
+/// Creates a new dot directory in the systems State path (See [`dirs::runtime_dir`])
+pub fn state_store(path: impl AsRef<Path>) -> io::Result<Option<PathBuf>> {
     create_store(StoreType::State, path)
 }
 
-#[cfg(not(any(target_os = "macos", target_os = "ios")))]
-pub fn template_store(path: impl AsRef<Path>) -> io::Result<PathBuf> {
+/// Creates a new dot directory in the systems Template path (See [`dirs::template_dir`])
+pub fn template_store(path: impl AsRef<Path>) -> io::Result<Option<PathBuf>> {
     create_store(StoreType::Template, path)
 }
 
-pub fn video_store(path: impl AsRef<Path>) -> io::Result<PathBuf> {
+/// Creates a new dot directory in the systems Video path (See [`dirs::video_dir`])
+pub fn video_store(path: impl AsRef<Path>) -> io::Result<Option<PathBuf>> {
     create_store(StoreType::Video, path)
 }
 
-pub fn custom_store(root: impl AsRef<Path>, path: impl AsRef<Path>) -> io::Result<PathBuf> {
-    let root = PathBuf::from(root.as_ref());
-    let store_dir = root.join(format!(".{}", path.as_ref().display()));
+/// Create a new dot directory in a custom location of your choosing.
+///
+/// # Argments
+///
+/// * `root_path`: The root directory to create the target
+/// * `target`: The name of the dot directory or path to create
+///
+/// # Examples
+///
+/// ```rust,no_run
+/// use dotstore;
+///
+/// fn main() -> std::io::Result<()> {
+///     // Create a new dot directory in a specified location
+///     // Will create `/home/user/project/config/.app`
+///     let path = dotstore::custom_store("/home/user/project/config", "app")?;
+///
+///     // Will create `/home/user/project/.settings/user/local`
+///     let another_path = dotstore::custom_store("/home/user/project", "settings/user/local")?;
+/// }
+/// ```
+pub fn custom_store(
+    root_path: impl AsRef<Path>,
+    target: impl AsRef<Path>,
+) -> io::Result<Option<PathBuf>> {
+    let root = PathBuf::from(root_path.as_ref());
+    let store_dir = root.join(format!(".{}", target.as_ref().display()));
     create_dir(&store_dir)?;
 
-    Ok(store_dir)
+    Ok(Some(store_dir))
 }
